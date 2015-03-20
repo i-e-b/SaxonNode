@@ -691,6 +691,7 @@ function $setUserData(this$static, key, name_0, data_0){
 }
 
 function $transform(this$static, source, target){
+    console.log("##Transform");
     var c2, currentIter, initialContext, mode, pipe, success, t, tc;
     if (this$static.inUse) {
         throw new IllegalStateException_0('The Transformer is being used recursively or concurrently. This is not permitted.');
@@ -756,10 +757,14 @@ function $transform(this$static, source, target){
         $closeResult(initialContext);
         $apply_1(this$static.pendingUpdateList, initialContext);
         success = true;
+        console.log("## Transform: Success! ");
         this$static.principalOutputNode = this$static.openHTMLWriter.currentNode;
         return this$static.principalOutputNode;
+    } catch (err) {
+        console.log("@@ ERROR IN TRANSFORM: "+err);
     }
     finally {
+        console.log("## exiting transform");
         this$static.inUse = false;
         this$static.principalResultURI = null;
         loggingIsEnabled() && !!traceListener && (success?isTraceEnabled && $close_0(traceListener):(traceListener.indent = 0));
@@ -1092,7 +1097,6 @@ function runCommand(cmd, target){
     var methodVal = null;
     var sourceVal = null;
     var sourceDoc = null;
-    var result = null;
     for (var p_0 in cmd) {
         if (cmd.hasOwnProperty(p_0)) {
             var pValue = cmd[p_0];
@@ -1107,7 +1111,8 @@ function runCommand(cmd, target){
                     proc.setInitialTemplate(pValue);
                     break;
                 case 'stylesheet':
-                    if (typeof pValue == 'string' || pValue instanceof String) {
+                    // Currently only handles pre-parsed stylesheets
+                    /*if (typeof pValue == 'string' || pValue instanceof String) {
                         try {
                             var s = $wnd.Saxon.requestXML(pValue);
                             proc.importStylesheet(s);
@@ -1116,9 +1121,9 @@ function runCommand(cmd, target){
                             throw 'Saxon.run error: on importing stylesheet ' + pValue;
                         }
                     }
-                    else {
+                    else {*/
                         proc.importStylesheet(pValue);
-                    }
+                    /*}*/
 
                     break;
                 case 'logLevel':
@@ -1134,7 +1139,9 @@ function runCommand(cmd, target){
                     proc.setSuccess(pValue);
                     break;
                 case 'source':
-                    typeof pValue == 'string' || pValue instanceof String?(sourceDoc = $wnd.Saxon.requestXML(pValue)):(sourceDoc = pValue);
+                    // currently only handles pre-parsed input xml
+                    //typeof pValue == 'string' || pValue instanceof String?(sourceDoc = $wnd.Saxon.requestXML(pValue)):(sourceDoc = pValue);
+                    sourceDoc = pValue;
                     break;
                 case 'parameters':
                     for (var x_0 in pValue) {
@@ -1145,7 +1152,7 @@ function runCommand(cmd, target){
             }
         }
     }
-    methodVal == 'transformToFragment'?proc.transformToFragment(sourceDoc, target):methodVal == 'transformToHTMLFragment'?proc.transformToHTMLFragment(sourceDoc, null):methodVal == 'transformToDocument'?proc.transformToDocument(sourceDoc):proc.updateHTMLDocument(sourceDoc, null);
+    methodVal == 'transformToFragment'?proc.transformToFragment(sourceDoc, target):methodVal == 'transformToHTMLFragment'?proc.transformToHTMLFragment(sourceDoc, target):methodVal == 'transformToDocument'?proc.transformToDocument(sourceDoc):proc.updateHTMLDocument(sourceDoc, target);
     return proc;
 }
 
@@ -1651,6 +1658,7 @@ function $importStylesheet(this$static, doc){
 }
 
 function $invokeTransform(this$static, inDoc, target){
+    console.log("##InvokeTransform");
     var controller, e, outResult;
     !this$static.fetchedSourceDoc && (this$static.fetchedSourceDoc = inDoc);
     if (this$static.transformInvoked || !this$static.stylesheet || this$static.docFetchRequired && !this$static.fetchedSourceDoc) {
@@ -1770,6 +1778,7 @@ function $registerNonDOMevents(this$static, controller){
 }
 
 function $renderXML(this$static, inSourceDoc, styleDoc, target){
+    console.log("##RenderXML");
     var asyncSourceURI, e, htmlDoc, nodeType, sheet_0, sourceDoc, sourceNode;
     try {
         if (!styleDoc) {
@@ -1837,19 +1846,20 @@ function $transformToDocument(this$static, sourceDoc){
 
 function $transformToFragment(this$static, sourceDoc, ownerDocument){
     var owner, targetDocumentFragment;
+    console.log("##Transform to fragment");
     owner = !ownerDocument?createDocument(this$static.localController.principalResultURI):ownerDocument;
     targetDocumentFragment = owner.createDocumentFragment();
     $setTargetNode(this$static.localController, owner);
     $setApiCommand(this$static.localController, ($clinit_Controller$APIcommand() , TRANSFORM_TO_FRAGMENT));
+    console.log("##Render xml");
     return $renderXML(this$static, sourceDoc, this$static.importedStylesheet, targetDocumentFragment);
 }
 
 function $updateHTMLDocument(this$static, sourceDoc, targetDoc, cmd){
-    /*!targetDoc && (targetDoc = $doc);
+    !targetDoc && (targetDoc = $doc);
     $setApiCommand(this$static.localController, cmd);
     $setTargetNode(this$static.localController, targetDoc);
-    $renderXML(this$static, sourceDoc, this$static.importedStylesheet, getBodyElement());*/
-   // I don't think we can do this in Node...
+    $renderXML(this$static, sourceDoc, this$static.importedStylesheet, getBodyElement());
 }
 
 function Xslt20ProcessorImpl(){
@@ -3276,8 +3286,8 @@ function setAttributeJs(doc, element, name_0, URI, value_0){
 
 function setAttributeProps(element, localName, val){
     $clinit_HTMLWriter();
-    ieVersion_0 == 0 && (ieVersion_0 = getNativeIEVersion());
-    if (ieVersion_0 > 0 && (ieVersion_0 == 0 && (ieVersion_0 = getNativeIEVersion()) , ieVersion_0 < 9)) {
+    ieVersion_0 == 0;
+    if (ieVersion_0 > 0 && (ieVersion_0 == 0 && (ieVersion_0 = 0) , ieVersion_0 < 9)) {
         if ($equals_5(localName, 'style')) {
             typeof element.style !== 'undefined' && setStyleProperties(element, val);
         }
@@ -3321,7 +3331,7 @@ function setStyleProperties(element, styleAttribute){
 }
 
 function tableAttributeFix(name_0, wMode){
-    wMode != 1 && (ieVersion_0 == 0 && (ieVersion_0 = getNativeIEVersion()) , ieVersion_0 > 0) && name_0.length > 5 && ($equals_5(name_0, 'rowspan')?(name_0 = 'rowSpan'):$equals_5(name_0, 'colspan')?(name_0 = 'colSpan'):$equals_5(name_0, 'cellpadding')?(name_0 = 'cellPadding'):$equals_5(name_0, 'cellspacing') && (name_0 = 'cellSpacing'));
+    wMode != 1 && (ieVersion_0 == 0 && (ieVersion_0 = 0) , ieVersion_0 > 0) && name_0.length > 5 && ($equals_5(name_0, 'rowspan')?(name_0 = 'rowSpan'):$equals_5(name_0, 'colspan')?(name_0 = 'colSpan'):$equals_5(name_0, 'cellpadding')?(name_0 = 'cellPadding'):$equals_5(name_0, 'cellspacing') && (name_0 = 'cellSpacing'));
     return name_0;
 }
 
@@ -59755,24 +59765,31 @@ function TransformFromStrings(inputDocStr, transformDocStr) {
     var doc = s.parseXML(inputDocStr);
     var styleSh = s.parseXML(transformDocStr);
 
-    // dummy output document.
-    var ox = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?>', 'text/xml');
+    console.log("running transform");
+    var result = runCommand({source:doc, stylesheet:styleSh, method:'transformToFragment', logLevel:"ALL"}, doc);
+    console.log("complete");
 
-    var result = runCommand({source:doc, stylesheet:styleSh, method:'transformToFragment'}, ox);
-
+    if (!result.g.controller.principalOutputNode) {
+        //console.dir(result.g.controller.targetNode);
+        //console.dir(result.g.controller.sourceNode);
+        //var util = require('util');
+        //console.log(util.inspect(result, {showHidden: false, depth: 5}));
+        return "FAILED TO GENERATE OUTPUT";
+    }
     return (new XMLSerializer()).serializeToString(result.g.controller.principalOutputNode);
 }
 
 
 // Example usage:
+/*
 console.log(
     TransformFromStrings(
         '<?xml version="1.0" encoding="UTF-8"?><root><hello>world</hello></root>',
         '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:template match="node()|@*"> <xsl:copy> <xsl:apply-templates select="node()|@*"/> </xsl:copy> </xsl:template></xsl:stylesheet>'
     )
 );
+*/
 
 
-
-module.exports = moduleRoot.Saxon;
+module.exports = TransformFromStrings;
 
