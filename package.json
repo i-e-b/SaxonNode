@@ -1,6 +1,6 @@
 {
   "name": "saxon-xslt",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "SaxonCE ported for use in Node.js",
   "main": "Saxon.js",
   "scripts": {
