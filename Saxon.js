@@ -59780,24 +59780,22 @@ register();
 $export0();
 
 var s = moduleRoot.Saxon;
-console.log("functions:");
-console.dir(s);
 console.log("version:");
 console.log(s.getVersion());
 
-var doc = s.parseXML('<?xml version="1.0" encoding="UTF-8"?><root></root>');
+var doc = s.parseXML('<?xml version="1.0" encoding="UTF-8"?><root><hello>world</hello></root>');
 var styleSh = s.parseXML('<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:template match="node()|@*"> <xsl:copy> <xsl:apply-templates select="node()|@*"/> </xsl:copy> </xsl:template></xsl:stylesheet>');
 //console.dir(doc);
 
 console.log("running command...");
 
-var ox = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?><root><hello>world</hello></root>', 'text/xml');
+// dummy output document.
+var ox = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?><root/>', 'text/xml');
     
 var result = runCommand({source:doc, stylesheet:styleSh, method:'transformToFragment'}, ox);
-console.dir(result.g.controller);
 
 console.log("******************** FINAL RESULT: ********************");
-console.log((new XMLSerializer()).serializeToString(ox));
+console.log((new XMLSerializer()).serializeToString(result.g.controller.principalOutputNode));
 
 //var pr = s.newXSLT20Processor(doc);
 //console.log("Here's the processor:");
