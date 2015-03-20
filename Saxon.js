@@ -59779,31 +59779,32 @@ setGwtProperty('permProps', [[['locale', 'default'], ['user.agent', 'safari']]])
 register();
 $export0();
 
-var s = moduleRoot.Saxon;
-console.log("version:");
-console.log(s.getVersion());
 
-var doc = s.parseXML('<?xml version="1.0" encoding="UTF-8"?><root><hello>world</hello></root>');
-var styleSh = s.parseXML('<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:template match="node()|@*"> <xsl:copy> <xsl:apply-templates select="node()|@*"/> </xsl:copy> </xsl:template></xsl:stylesheet>');
-//console.dir(doc);
 
-console.log("running command...");
+/** Returns an output dox string */
+function TransformFromStrings(inputDocStr, transformDocStr) {
+    var s = moduleRoot.Saxon;
+    var doc = s.parseXML(inputDocStr);
+    var styleSh = s.parseXML(transformDocStr);
 
-// dummy output document.
-var ox = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?><root/>', 'text/xml');
-    
-var result = runCommand({source:doc, stylesheet:styleSh, method:'transformToFragment'}, ox);
+    // dummy output document.
+    var ox = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?><root/>', 'text/xml');
 
-console.log("******************** FINAL RESULT: ********************");
-console.log((new XMLSerializer()).serializeToString(result.g.controller.principalOutputNode));
+    var result = runCommand({source:doc, stylesheet:styleSh, method:'transformToFragment'}, ox);
 
-//var pr = s.newXSLT20Processor(doc);
-//console.log("Here's the processor:");
-//console.dir(pr);
-//
-//var x = s.run(/*cmd */ {source:doc, stylesheet:styleSh});
-//console.log("Result of `run`:");
-//console.dir(x);
+    return (new XMLSerializer()).serializeToString(result.g.controller.principalOutputNode);
+}
+
+
+// Example usage:
+console.log(
+    TransformFromStrings(
+        '<?xml version="1.0" encoding="UTF-8"?><root><hello>world</hello></root>',
+        '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:template match="node()|@*"> <xsl:copy> <xsl:apply-templates select="node()|@*"/> </xsl:copy> </xsl:template></xsl:stylesheet>'
+    )
+);
+
+
 
 module.exports = moduleRoot.Saxon;
 
