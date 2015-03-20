@@ -1770,8 +1770,6 @@ function $registerNonDOMevents(this$static, controller){
 }
 
 function $renderXML(this$static, inSourceDoc, styleDoc, target){
-
-    console.log("##$renderXML(this$static, inSourceDoc, styleDoc, target)");
     var asyncSourceURI, e, htmlDoc, nodeType, sheet_0, sourceDoc, sourceNode;
     try {
         if (!styleDoc) {
@@ -1838,7 +1836,6 @@ function $transformToDocument(this$static, sourceDoc){
 }
 
 function $transformToFragment(this$static, sourceDoc, ownerDocument){
-    console.log("$transformToFragment(this$static, "+sourceDoc+", "+ownerDocument+")");
     var owner, targetDocumentFragment;
     owner = !ownerDocument?createDocument(this$static.localController.principalResultURI):ownerDocument;
     targetDocumentFragment = owner.createDocumentFragment();
@@ -3488,34 +3485,11 @@ _.mode = 0;
 var logger_1;
 var Lclient_net_sf_saxon_ce_dom_HTMLWriter_2_classLit = createForClass('client.net.sf.saxon.ce.dom', 'HTMLWriter', 425, Ljava_lang_Object_2_classLit);
 function createDocument(baseURI){
-
-    console.log("## createDocument("+baseURI+")");
+    // this always parses input as string. TODO: use require to load xml doc?
     var xmlDoc_0;
     parser = new DOMParser;
     xmlDoc_0 = parser.parseFromString(baseURI, 'text/xml');
     return xmlDoc_0;
-/*
-    var doc;
-    if (document.implementation && document.implementation.createDocument) {
-        doc = document.implementation.createDocument('', '', null);
-    }
-    else {
-        try {
-            doc = new ActiveXObject('MSXML2.DOMDocument');
-        }
-        catch (e) {
-            doc = new ActiveXObject('Microsoft.XMLDOM');
-        }
-        doc.preserveWhiteSpace = true;
-        try {
-            xmlDoc.setProperty && xmlDoc.setProperty('ProhibitDTD', false);
-        }
-        catch (e) {
-        }
-    }
-    baseURI != null && doc.URL && (doc.URL = baseURI);
-    return doc;
-    */
 }
 
 function makeHTTPRequest(url_0){
@@ -16243,7 +16217,6 @@ function $initializeBindery(this$static, bindery){
 }
 
 function $loadStylesheetModule(this$static, rawDoc){
-    console.log("##$loadStylesheetModule(this$static, rawDoc)");
     var commentStripper, doc, nodeFactory, nsReducer, pipe, startTagBuffer, styleBuilder, styleStripper, useWhenFilter;
     nodeFactory = new StyleNodeFactory;
     styleBuilder = new LinkedTreeBuilder;
@@ -16277,7 +16250,6 @@ function $loadStylesheetModule(this$static, rawDoc){
     styleBuilder.depth = 0;
     styleBuilder.allocateSequenceNumbers = true;
     styleBuilder.nextNodeNumber = 1;
-    console.log("~~$loadStylesheetModule(this$static, rawDoc)");
     return doc;
 }
 
@@ -16289,7 +16261,6 @@ function $newTransformer(this$static){
 }
 
 function $prepare(this$static, doc){
-    console.log("##$prepare(this$static, doc)");
     var e, message;
     message = '';
     try {
@@ -16329,7 +16300,6 @@ function $setFunctionLibrary(this$static, functionLibrary){
 }
 
 function $setStylesheetDocument(this$static, doc){
-    console.log("##$setStylesheetDocument(this$static, doc)");
     var psm, styleDoc, top_0, topnode;
     styleDoc = doc;
     topnode = dynamicCast(doc.documentElement_0, 11);
@@ -16358,7 +16328,6 @@ function $setStylesheetDocument(this$static, doc){
     top_0.exec_0 = psm.preparedStylesheet;
     $preprocess(psm);
     $compileStylesheet(psm);
-    console.log("~~$setStylesheetDocument(this$static, doc)");
 }
 
 function Executable(config){
@@ -34631,7 +34600,6 @@ function $compileError_4(this$static, message, errorCode){
 }
 
 function $compileStylesheet(this$static){
-    console.log("##$compileStylesheet(this$static)");
     var arities, arities0, decl, err, fi, i_0, i0, i1, inst, node, pss, ruleManager, snode;
     try {
         pss = this$static.preparedStylesheet;
@@ -59788,7 +59756,7 @@ function TransformFromStrings(inputDocStr, transformDocStr) {
     var styleSh = s.parseXML(transformDocStr);
 
     // dummy output document.
-    var ox = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?><root/>', 'text/xml');
+    var ox = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?>', 'text/xml');
 
     var result = runCommand({source:doc, stylesheet:styleSh, method:'transformToFragment'}, ox);
 
