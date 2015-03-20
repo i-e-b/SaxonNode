@@ -1,13 +1,12 @@
 var DOMParser = require('xmldom').DOMParser;
+var XMLSerializer = require('xmldom').XMLSerializer;
 
 var moduleRoot = {};
 
 // This awful mess was spewed out by GWT based on the code at https://github.com/i-e-b/Saxon-CE
 // It was then massaged by hand to make it work in Node.js
 
-var $gwt_version = "2.7.0";
 var $wnd = moduleRoot;
-var $moduleName, $moduleBase;
 var $stats = $wnd.__gwtStatsEvent ? function(a) {$wnd.__gwtStatsEvent(a)} : null;
 var $strongName = '8D8C9A45A0C652BCFCA488B00D108D72';
 var $intern_0 = 2147483647, $intern_1 = {3:1, 5:1}, $intern_2 = 65535, $intern_3 = {47:1, 3:1, 5:1}, $intern_4 = {18:1, 3:1}, $intern_5 = {136:1, 3:1, 5:1}, $intern_6 = {64:1, 165:1}, $intern_7 = {120:1}, $intern_8 = {3:1, 5:1, 42:1}, $intern_9 = {3:1}, $intern_10 = {3:1, 19:1, 37:1}, $intern_11 = 67043328, $intern_12 = 57344, $intern_13 = 16778751, $intern_14 = 32768, $intern_15 = {6:1, 54:1}, $intern_16 = {17:1, 3:1, 5:1}, $intern_17 = 8192, $intern_18 = {64:1}, $intern_19 = {79:1, 6:1}, $intern_20 = 24576, $intern_21 = 16384, $intern_22 = 4194304, $intern_23 = 33554432, $intern_24 = {99:1, 126:1, 6:1}, $intern_25 = 131072, $intern_26 = 262144, $intern_27 = 524288, $intern_28 = 1048576, $intern_29 = 2097152, $intern_30 = {270:1, 186:1}, $intern_31 = {127:1, 3:1, 5:1}, $intern_32 = {115:1, 6:1}, $intern_33 = 49152, $intern_34 = 65536, $intern_35 = -32769, $intern_36 = {6:1, 20:1}, $intern_37 = {105:1, 64:1}, $intern_38 = -4194305, $intern_39 = 8388608, $intern_40 = 1024, $intern_41 = 16777216, $intern_42 = {6:1, 39:1, 49:1}, $intern_43 = {6:1, 39:1, 124:1, 49:1}, $intern_44 = {28:1, 279:1, 359:1}, $intern_45 = {126:1, 6:1, 173:1, 39:1, 49:1}, $intern_46 = 4194303, $intern_47 = 1048575, $intern_48 = 55296, $intern_49 = 56319, $intern_50 = 56320, $intern_51 = 1000, $intern_52 = 1000000, $intern_53 = {167:1}, $intern_54 = {271:1, 64:1}, $intern_55 = {105:1, 271:1, 64:1}, $intern_56 = {110:1}, $intern_57 = 1073741824, $intern_58 = -2147483648, $intern_59 = 1023, $intern_60 = {310:1}, $intern_61 = 12713984, $intern_62 = {199:1}, $intern_63 = {3:1, 19:1, 35:1, 37:1}, $intern_64 = {67:1, 166:1}, $intern_65 = {69:1}, $intern_66 = {47:1, 33:1, 3:1, 5:1}, $intern_67 = {15:1, 7:1, 14:1, 10:1, 23:1}, $intern_68 = {28:1, 15:1, 7:1, 14:1, 11:1, 27:1, 10:1, 31:1, 23:1}, $intern_69 = {28:1, 15:1, 7:1, 14:1, 11:1, 244:1, 27:1, 10:1, 31:1, 23:1}, $intern_70 = {105:1, 64:1, 185:1, 165:1}, $intern_71 = 100000, $intern_72 = 10000000, $intern_73 = 100000000, $intern_74 = 1000000000, $intern_75 = {15:1, 7:1, 14:1, 23:1}, $intern_76 = 0.3010299956639812, $intern_77 = {15:1, 14:1, 81:1, 13:1, 73:1, 95:1}, $intern_78 = 9223372036854775807, $intern_79 = -9223372036854775808, $intern_80 = 3.141592653589793, $intern_81 = {3:1, 5:1, 848:1}, $intern_82 = {59:1, 65:1, 3:1, 24:1, 40:1}, $intern_83 = {65:1, 170:1, 3:1, 24:1, 40:1}, $intern_84 = {65:1, 171:1, 3:1, 24:1, 40:1}, $intern_85 = {65:1, 172:1, 3:1, 24:1, 40:1}, $intern_86 = {103:1, 3:1, 24:1, 40:1}, $intern_87 = {253:1, 3:1, 19:1, 35:1, 37:1}, $intern_88 = {200:1, 3:1, 19:1, 37:1}, $intern_89 = 17592186044416, $intern_90 = {111:1, 100:1, 101:1, 107:1, 112:1, 98:1, 91:1}, $intern_91 = {524:1, 522:1, 523:1, 135:1}, $intern_92 = {3:1, 5:1, 521:1}, $intern_93 = {135:1, 851:1}, $intern_94 = {850:1, 135:1}, $intern_95 = 67108864, $intern_96 = {111:1, 100:1, 101:1, 107:1, 112:1, 341:1, 98:1, 91:1}, $intern_97 = {3:1, 48:1, 37:1}, $intern_98 = 4294967296, $intern_99 = {269:1}, $intern_100 = {97:1}, $intern_101 = {3:1, 16:1, 88:1, 237:1}, $intern_102 = {3:1, 88:1, 237:1};
@@ -16,21 +15,7 @@ var _, initFnList_0, prototypesByTypeId_0 = {}, permutationId = -1;
 function typeMarkerFn(){
 }
 
-function portableObjCreate(obj){
-    function F(){
-    }
-
-    ;
-    F.prototype = obj || {};
-    return new F;
-}
-
-function modernizeBrowser(){
-    !Array.isArray && (Array.isArray = function(vArg){
-        return Object.prototype.toString.call(vArg) === '[object Array]';
-    }
-    );
-}
+function portableObjCreate(obj){ function F(){ } ; F.prototype = obj || {}; return new F; }
 
 function maybeGetClassLiteralFromPlaceHolder_0(entry){
     return entry instanceof Array?entry[0]:null;
@@ -71,31 +56,6 @@ function setGwtProperty(propertyName, propertyValue){
 
 function registerEntry(){
     return entry_0;
-}
-
-function gwtOnLoad_0(errFn, modName, modBase, softPermutationId){
-    ensureModuleInit();
-    var initFnList = initFnList_0;
-    $moduleName = modName;
-    $moduleBase = modBase;
-    permutationId = softPermutationId;
-    function initializeModules(){
-        for (var i_0 = 0; i_0 < initFnList.length; i_0++) {
-            initFnList[i_0]();
-        }
-    }
-
-    if (errFn) {
-        try {
-            $entry(initializeModules)();
-        }
-        catch (e) {
-            errFn(modName, e);
-        }
-    }
-    else {
-        $entry(initializeModules)();
-    }
 }
 
 function ensureModuleInit(){
@@ -155,7 +115,6 @@ _.toString = function(){
 }
 ;
 stringCastMap = {3:1, 415:1, 24:1, 2:1};
-modernizeBrowser();
 function toStringSimple(obj){
     return obj.toString?obj.toString():'[JavaScriptObject]';
 }
@@ -464,16 +423,6 @@ function Configuration(){
     this.implicitTimezone = fromJavaDate(new Date_0).tzMinutes;
     this.sourceDocumentPool = new DocumentPool;
     this.logger = (new LoggerImplRegular , $ensureLogger(getLogManager(), 'Configuration'));
-}
-
-function getNativeIEVersion(){
-    var rv = -1;
-    if (navigator.appName == 'Microsoft Internet Explorer') {
-        var ua = navigator.userAgent;
-        var re = new RegExp('MSIE ([0-9]{1,}[.0-9]{0,})');
-        re.exec(ua) != null && (rv = parseFloat(RegExp.$1));
-    }
-    return rv;
 }
 
 defineClass(311, 1, {}, Configuration);
@@ -1138,7 +1087,7 @@ function requestXML(URI){
     }
 }
 
-function runCommand(cmd){
+function runCommand(cmd, target){
     var proc = $wnd.Saxon.newXSLT20Processor();
     var methodVal = null;
     var sourceVal = null;
@@ -1196,7 +1145,7 @@ function runCommand(cmd){
             }
         }
     }
-    methodVal == 'transformToFragment'?proc.transformToFragment(sourceDoc, null):methodVal == 'transformToHTMLFragment'?proc.transformToHTMLFragment(sourceDoc, null):methodVal == 'transformToDocument'?proc.transformToDocument(sourceDoc):proc.updateHTMLDocument(sourceDoc, null);
+    methodVal == 'transformToFragment'?proc.transformToFragment(sourceDoc, target):methodVal == 'transformToHTMLFragment'?proc.transformToHTMLFragment(sourceDoc, null):methodVal == 'transformToDocument'?proc.transformToDocument(sourceDoc):proc.updateHTMLDocument(sourceDoc, null);
     return proc;
 }
 
@@ -1821,6 +1770,8 @@ function $registerNonDOMevents(this$static, controller){
 }
 
 function $renderXML(this$static, inSourceDoc, styleDoc, target){
+
+    console.log("##$renderXML(this$static, inSourceDoc, styleDoc, target)");
     var asyncSourceURI, e, htmlDoc, nodeType, sheet_0, sourceDoc, sourceNode;
     try {
         if (!styleDoc) {
@@ -1840,12 +1791,12 @@ function $renderXML(this$static, inSourceDoc, styleDoc, target){
             $doGet(asyncSourceURI, new Xslt20ProcessorImpl$1(this$static, asyncSourceURI, target));
         }
         if (!this$static.stylesheet) {
-            loggingIsEnabled() && (isTraceEnabled = mainLogger.impl.level_0 == ($clinit_Level() , FINEST) , isTraceEnabled && (traceListener = new XSLTTraceListener));
-            $log_1(logger_0, ($clinit_Level() , FINE), 'Compiling Stylesheet...');
+            //loggingIsEnabled() && (isTraceEnabled = mainLogger.impl.level_0 == ($clinit_Level() , FINEST) , isTraceEnabled && (traceListener = new XSLTTraceListener));
+            console.log('Compiling Stylesheet...');
             sheet_0 = new Executable(this$static.config);
             $prepare(sheet_0, styleDoc);
             this$static.stylesheet = sheet_0;
-            $log_1(logger_0, FINE, 'Stylesheet compiled OK');
+            console.log('Stylesheet compiled OK');
         }
         if (asyncSourceURI == null && !!inSourceDoc) {
             nodeType = is(inSourceDoc)?inSourceDoc.nodeType:0;
@@ -1887,6 +1838,7 @@ function $transformToDocument(this$static, sourceDoc){
 }
 
 function $transformToFragment(this$static, sourceDoc, ownerDocument){
+    console.log("$transformToFragment(this$static, "+sourceDoc+", "+ownerDocument+")");
     var owner, targetDocumentFragment;
     owner = !ownerDocument?createDocument(this$static.localController.principalResultURI):ownerDocument;
     targetDocumentFragment = owner.createDocumentFragment();
@@ -2227,10 +2179,7 @@ function $getAltAttributes(this$static){
         return this$static.attributeList;
     }
     elem = this$static.node;
-    ieVersion = (ieVersion_0 == 0 && (ieVersion_0 = getNativeIEVersion()) , ieVersion_0);
-    if (ieVersion < 0 || ieVersion > 8) {
-        return $getMainAttributes(this$static);
-    }
+    return $getMainAttributes(this$static);
     value_0 = elem.outerHTML;
     if (value_0 == null) {
         return $getMainAttributes(this$static);
@@ -3539,6 +3488,13 @@ _.mode = 0;
 var logger_1;
 var Lclient_net_sf_saxon_ce_dom_HTMLWriter_2_classLit = createForClass('client.net.sf.saxon.ce.dom', 'HTMLWriter', 425, Ljava_lang_Object_2_classLit);
 function createDocument(baseURI){
+
+    console.log("## createDocument("+baseURI+")");
+    var xmlDoc_0;
+    parser = new DOMParser;
+    xmlDoc_0 = parser.parseFromString(baseURI, 'text/xml');
+    return xmlDoc_0;
+/*
     var doc;
     if (document.implementation && document.implementation.createDocument) {
         doc = document.implementation.createDocument('', '', null);
@@ -3559,6 +3515,7 @@ function createDocument(baseURI){
     }
     baseURI != null && doc.URL && (doc.URL = baseURI);
     return doc;
+    */
 }
 
 function makeHTTPRequest(url_0){
@@ -16286,6 +16243,7 @@ function $initializeBindery(this$static, bindery){
 }
 
 function $loadStylesheetModule(this$static, rawDoc){
+    console.log("##$loadStylesheetModule(this$static, rawDoc)");
     var commentStripper, doc, nodeFactory, nsReducer, pipe, startTagBuffer, styleBuilder, styleStripper, useWhenFilter;
     nodeFactory = new StyleNodeFactory;
     styleBuilder = new LinkedTreeBuilder;
@@ -16319,6 +16277,7 @@ function $loadStylesheetModule(this$static, rawDoc){
     styleBuilder.depth = 0;
     styleBuilder.allocateSequenceNumbers = true;
     styleBuilder.nextNodeNumber = 1;
+    console.log("~~$loadStylesheetModule(this$static, rawDoc)");
     return doc;
 }
 
@@ -16330,12 +16289,14 @@ function $newTransformer(this$static){
 }
 
 function $prepare(this$static, doc){
+    console.log("##$prepare(this$static, doc)");
     var e, message;
     message = '';
     try {
         $setStylesheetDocument(this$static, $loadStylesheetModule(this$static, doc));
     }
     catch ($e0) {
+        console.log($e0);
         $e0 = wrap_0($e0);
         if (instanceOf($e0, 4)) {
             e = $e0;
@@ -16368,10 +16329,12 @@ function $setFunctionLibrary(this$static, functionLibrary){
 }
 
 function $setStylesheetDocument(this$static, doc){
+    console.log("##$setStylesheetDocument(this$static, doc)");
     var psm, styleDoc, top_0, topnode;
     styleDoc = doc;
     topnode = dynamicCast(doc.documentElement_0, 11);
     if (!topnode) {
+        console.log("No top node!");
         throw new XPathException_0('Failed to parse stylesheet');
     }
     instanceOf(topnode, 174) && (styleDoc = $makeStylesheet(dynamicCast(topnode, 174), this$static));
@@ -16395,6 +16358,7 @@ function $setStylesheetDocument(this$static, doc){
     top_0.exec_0 = psm.preparedStylesheet;
     $preprocess(psm);
     $compileStylesheet(psm);
+    console.log("~~$setStylesheetDocument(this$static, doc)");
 }
 
 function Executable(config){
@@ -34667,6 +34631,7 @@ function $compileError_4(this$static, message, errorCode){
 }
 
 function $compileStylesheet(this$static){
+    console.log("##$compileStylesheet(this$static)");
     var arities, arities0, decl, err, fi, i_0, i0, i1, inst, node, pss, ruleManager, snode;
     try {
         pss = this$static.preparedStylesheet;
@@ -34695,6 +34660,8 @@ function $compileStylesheet(this$static){
             }
         }
         if (this$static.preparedStylesheet.errorCount > 0) {
+            console.log("Early exit from compile due to errors");
+            console.dir(pss);
             return;
         }
         for (i_0 = 0; i_0 < this$static.topLevel.array.length; i_0++) {
@@ -34734,6 +34701,7 @@ function $compileStylesheet(this$static){
         $computeRankings_0(ruleManager);
     }
     catch ($e1) {
+        console.log("Compile fault "+$e1);
         $e1 = wrap_0($e1);
         if (instanceOf($e1, 35)) {
             err = $e1;
@@ -52108,142 +52076,8 @@ function $add_8(this$static, w){
     $add_12(this$static.logArea, w);
     $setScrollPosition(this$static.scrollPanel, (($clinit_DOM() , this$static.scrollPanel.element).scrollHeight || 0) | 0);
 }
-
-function LoggingPopup(){
-    var bottomBar, mainPanel, maxmin, titleBar;
-    SimplePanel.call(this);
-    this.glassResizer = new PopupPanel$1;
-    this.leftPosition = -1;
-    this.resizeAnimation = new PopupPanel$ResizeAnimation(this);
-    this.topPosition = -1;
-    $appendChild_0(($clinit_DOM() , this.element), $doc.createElement('div'));
-    $setPopupPosition(this, 0, 0);
-    $setClassName($getParentElement($getFirstChildElement(this.element)), 'gwt-PopupPanel');
-    $setClassName($getFirstChildElement(this.element), 'popupContent');
-    this.autoHide = false;
-    this.autoHideOnHistoryEvents = false;
-    this.modal = false;
-    mainPanel = new VerticalPanel;
-    $setPropertyString(mainPanel.table, 'border', '1');
-    mainPanel.element.style['backgroundColor'] = 'white';
-    titleBar = new HTML('<center><b>Logging<\/b><\/center>');
-    $add_12(mainPanel, titleBar);
-    new LoggingPopup$WindowMoveHandler(this, titleBar);
-    this.scrollPanel = new LoggingPopup$ScrollPanelWithMinSize;
-    $add_12(mainPanel, this.scrollPanel);
-    this.logArea = new VerticalPanel;
-    $setWidget(this.scrollPanel, this.logArea);
-    $setPixelSize_0(this.scrollPanel, 300, 200);
-    bottomBar = new HorizontalPanel;
-    $add_12(mainPanel, bottomBar);
-    bottomBar.element.style['width'] = '100%';
-    $setVerticalAlignment(bottomBar, ($clinit_HasVerticalAlignment() , ALIGN_BOTTOM));
-    maxmin = new Button;
-    $add_11(bottomBar, maxmin);
-    $addDomHandler(maxmin, new LoggingPopup$1(this, maxmin), ($clinit_ClickEvent() , $clinit_ClickEvent() , TYPE));
-    this.resizeIcon = new HTML("<div style='font-size:200%; line-height:75%'>\u21F2<\/div>");
-    $setAutoHorizontalAlignment(this.resizeIcon, ($clinit_HasHorizontalAlignment() , ALIGN_RIGHT));
-    $add_11(bottomBar, this.resizeIcon);
-    new LoggingPopup$WindowResizeHandler(this, this.resizeIcon);
-    $setWidget(this, mainPanel);
-    $show(this);
-}
-
-defineClass(669, 382, $intern_90, LoggingPopup);
-var Lcom_google_gwt_logging_client_LoggingPopup_2_classLit = createForClass('com.google.gwt.logging.client', 'LoggingPopup', 669, Lcom_google_gwt_user_client_ui_PopupPanel_2_classLit);
-function $onClick(this$static){
-    if ($equals_5($getElement(this$static.val$maxmin2).textContent, 'Minimize')) {
-        $setText(this$static.val$maxmin2, 'Maximize');
-        $setVisible(this$static.this$01.scrollPanel, false);
-        $setVisible(this$static.this$01.resizeIcon, false);
-    }
-    else {
-        $setVisible(this$static.this$01.scrollPanel, true);
-        $setVisible(this$static.this$01.resizeIcon, true);
-        $setText(this$static.val$maxmin2, 'Minimize');
-    }
-}
-
-function LoggingPopup$1(this$0, val$maxmin){
-    this.this$01 = this$0;
-    this.val$maxmin2 = val$maxmin;
-}
-
-defineClass(674, 1, {899:1, 135:1}, LoggingPopup$1);
-var Lcom_google_gwt_logging_client_LoggingPopup$1_2_classLit = createForClass('com.google.gwt.logging.client', 'LoggingPopup/1', 674, Ljava_lang_Object_2_classLit);
-function LoggingPopup$MouseDragHandler(dragHandle){
-    this.dragHandle = dragHandle;
-    $addDomHandler(dragHandle, this, ($clinit_MouseDownEvent() , $clinit_MouseDownEvent() , TYPE_0));
-    $addDomHandler(dragHandle, this, ($clinit_MouseUpEvent() , $clinit_MouseUpEvent() , TYPE_2));
-    $addDomHandler(dragHandle, this, ($clinit_MouseMoveEvent() , $clinit_MouseMoveEvent() , TYPE_1));
-}
-
 defineClass(436, 1, $intern_91);
-_.onMouseDown = function onMouseDown(event_0){
-    this.dragging = true;
-    setCapture(($clinit_DOM() , this.dragHandle.element));
-    this.dragStartX = $eventGetSubPixelClientX(event_0.nativeEvent) | 0;
-    this.dragStartY = $eventGetSubPixelClientY(event_0.nativeEvent) | 0;
-    $eventPreventDefault((null , currentEvent));
-}
-;
-_.onMouseMove = function onMouseMove(event_0){
-    if (this.dragging) {
-        this.handleDrag(($eventGetSubPixelClientX(event_0.nativeEvent) | 0) - this.dragStartX, ($eventGetSubPixelClientY(event_0.nativeEvent) | 0) - this.dragStartY);
-        this.dragStartX = $eventGetSubPixelClientX(event_0.nativeEvent) | 0;
-        this.dragStartY = $eventGetSubPixelClientY(event_0.nativeEvent) | 0;
-    }
-}
-;
-_.onMouseUp = function onMouseUp(event_0){
-    this.dragging = false;
-    releaseCapture(($clinit_DOM() , this.dragHandle.element));
-}
-;
-_.dragStartX = 0;
-_.dragStartY = 0;
-_.dragging = false;
 var Lcom_google_gwt_logging_client_LoggingPopup$MouseDragHandler_2_classLit = createForClass('com.google.gwt.logging.client', 'LoggingPopup/MouseDragHandler', 436, Ljava_lang_Object_2_classLit);
-function $getHorizontalScrollPosition(this$static){
-    return $getScrollLeft(($clinit_DOM() , this$static.scrollableElem));
-}
-
-function $getMaximumHorizontalScrollPosition(this$static){
-    return $getMaximumHorizontalScrollPosition_0((!impl_1 && (impl_1 = new ScrollImpl) , $clinit_DOM() , this$static.scrollableElem));
-}
-
-function $getMaximumVerticalScrollPosition(this$static){
-    return ((($clinit_DOM() , this$static.scrollableElem).scrollHeight || 0) | 0) - (this$static.scrollableElem.clientHeight | 0);
-}
-
-function $getMinimumHorizontalScrollPosition(this$static){
-    return $getMinimumHorizontalScrollPosition_0((!impl_1 && (impl_1 = new ScrollImpl) , $clinit_DOM() , this$static.scrollableElem));
-}
-
-function $getVerticalScrollPosition(this$static){
-    return (($clinit_DOM() , this$static.scrollableElem).scrollTop || 0) | 0;
-}
-
-function $setHorizontalScrollPosition(this$static, position){
-    $setScrollLeft(($clinit_DOM() , this$static.scrollableElem), position);
-}
-
-function $setScrollPosition(this$static, position){
-    $setScrollTop(($clinit_DOM() , this$static.scrollableElem), position);
-}
-
-function $setTouchScrollingDisabled(this$static){
-    var scroller, ua;
-    if (this$static.touchScroller) {
-        return false;
-    }
-    this$static.touchScroller = (scroller = (!isSupported && (isSupported = ($clinit_Boolean() , !impl && (impl = new TouchEvent$TouchSupportDetector) , impl.isSupported && !(ua = navigator.userAgent.toLowerCase() , /android ([3-9]+)\.([0-9]+)/.exec(ua) != null)?TRUE_1:FALSE_1)) , isSupported.value_0?new TouchScroller:null) , !!scroller && $setTargetWidget(scroller, this$static) , scroller);
-    return !this$static.touchScroller;
-}
-
-function $setVerticalScrollPosition(this$static, position){
-    $setScrollTop(($clinit_DOM() , this$static.scrollableElem), position);
-}
 
 defineClass(670, 381, $intern_90);
 _.getContainerElement = function getContainerElement_1(){
@@ -54298,7 +54132,7 @@ function UserAgentAsserter$UserAgentAssertionError(runtimeValue){
 defineClass(532, 48, $intern_97, UserAgentAsserter$UserAgentAssertionError);
 var Lcom_google_gwt_useragent_client_UserAgentAsserter$UserAgentAssertionError_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentAsserter/UserAgentAssertionError', 532, Ljava_lang_AssertionError_2_classLit);
 function $getRuntimeValue(){
-    var ua = navigator.userAgent.toLowerCase();
+    /*var ua = navigator.userAgent.toLowerCase();
     var docMode = $doc.documentMode;
     if (function(){
         return ua.indexOf('webkit') != -1;
@@ -54324,7 +54158,7 @@ function $getRuntimeValue(){
         return ua.indexOf('gecko') != -1 || docMode >= 11;
     }
     ())
-    return 'gecko1_8';
+    return 'gecko1_8';*/
     return 'unknown';
 }
 
@@ -59938,7 +59772,6 @@ function runDispatch(instance, clazz, meth, arguments_0, isStatic, isVarArgs){
 var impl_2;
 var I_classLit = createForPrimitive('int', 'I'), Z_classLit = createForPrimitive('boolean', 'Z'), Lcom_google_gwt_lang_CollapsedPropertyHolder_2_classLit = createForClass('com.google.gwt.lang', 'CollapsedPropertyHolder', 854, Ljava_lang_Object_2_classLit), Lcom_google_gwt_lang_JavaClassHierarchySetupUtil_2_classLit = createForClass('com.google.gwt.lang', 'JavaClassHierarchySetupUtil', 856, Ljava_lang_Object_2_classLit), Lcom_google_gwt_lang_LongLibBase$LongEmul_2_classLit = createForClass('com.google.gwt.lang', 'LongLibBase/LongEmul', null, Ljava_lang_Object_2_classLit), Lcom_google_gwt_lang_ModuleUtils_2_classLit = createForClass('com.google.gwt.lang', 'ModuleUtils', 859, Ljava_lang_Object_2_classLit), B_classLit = createForPrimitive('byte', 'B'), D_classLit = createForPrimitive('double', 'D'), S_classLit = createForPrimitive('short', 'S'), C_classLit = createForPrimitive('char', 'C'), Lorg_timepedia_exporter_client_Exportable_2_classLit = createForInterface('org.timepedia.exporter.client', 'Exportable'), Ljava_util_Map$Entry_2_classLit = createForInterface('java.util', 'Map/Entry'), Lclient_net_sf_saxon_ce_om_Sequence_2_classLit = createForInterface('client.net.sf.saxon.ce.om', 'Sequence'), Lclient_net_sf_saxon_ce_om_Item_2_classLit = createForInterface('client.net.sf.saxon.ce.om', 'Item'), Lclient_net_sf_saxon_ce_expr_Binding_2_classLit = createForInterface('client.net.sf.saxon.ce.expr', 'Binding'), Lclient_net_sf_saxon_ce_expr_sort_AtomicComparer_2_classLit = createForInterface('client.net.sf.saxon.ce.expr.sort', 'AtomicComparer'), Lclient_net_sf_saxon_ce_om_NodeInfo_2_classLit = createForInterface('client.net.sf.saxon.ce.om', 'NodeInfo');
 var $entry = registerEntry();
-var gwtOnLoad = gwtOnLoad = gwtOnLoad_0;
 addInitFunctions(init);
 setGwtProperty('permProps', [[['locale', 'default'], ['user.agent', 'safari']]]);
 
@@ -59947,15 +59780,32 @@ register();
 $export0();
 
 var s = moduleRoot.Saxon;
+console.log("functions:");
 console.dir(s);
+console.log("version:");
 console.log(s.getVersion());
 
 var doc = s.parseXML('<?xml version="1.0" encoding="UTF-8"?><root></root>');
+var styleSh = s.parseXML('<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:template match="node()|@*"> <xsl:copy> <xsl:apply-templates select="node()|@*"/> </xsl:copy> </xsl:template></xsl:stylesheet>');
 //console.dir(doc);
-var pr = s.newXSLT20Processor(doc);
-console.dir(pr);
 
-s.run(/*cmd */ {});
+console.log("running command...");
+
+var ox = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?><root><hello>world</hello></root>', 'text/xml');
+    
+var result = runCommand({source:doc, stylesheet:styleSh, method:'transformToFragment'}, ox);
+console.dir(result.g.controller);
+
+console.log("******************** FINAL RESULT: ********************");
+console.log((new XMLSerializer()).serializeToString(ox));
+
+//var pr = s.newXSLT20Processor(doc);
+//console.log("Here's the processor:");
+//console.dir(pr);
+//
+//var x = s.run(/*cmd */ {source:doc, stylesheet:styleSh});
+//console.log("Result of `run`:");
+//console.dir(x);
 
 module.exports = moduleRoot.Saxon;
 
