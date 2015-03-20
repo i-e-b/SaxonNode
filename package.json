@@ -1,5 +1,5 @@
 {
-  "name": "Saxon",
+  "name": "saxon-xslt",
   "version": "0.0.1",
   "description": "SaxonCE ported for use in Node.js",
   "main": "Saxon.js",
