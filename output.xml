@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><Package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="b239f455-9c8d-4829-aa5d-d37457e29b1c" BusinessID="000030" Path="/Package/Product/Launch_Entity" OrigType="Mobile_Offer_Template">
+<? version="1.0" encoding="UTF-8"?><Package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="b239f455-9c8d-4829-aa5d-d37457e29b1c" BusinessID="000030" Path="/Package/Product/Launch_Entity" OrigType="Mobile_Offer_Template">
    <Name>Mobile Offer</Name>
    <Description>Mobile Offer</Description>
    <Category_ID Product_Line_ID="11">11</Category_ID>
