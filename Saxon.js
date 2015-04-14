@@ -704,10 +704,10 @@ function $transform(thing, source, target){
         $apply_1(thing.pendingUpdateList, initialContext);
         success = true;
         console.log("## Transform: Success! ");
-        thing.principalOutputNode = thing.openHTMLWriter.currentNode;
+        thing.principalOutputNode = thing.openHTMLWriter;//.currentNode;
         return thing.principalOutputNode;
     } catch (err) {
-        console.log("@@ ERROR IN TRANSFORM: "+err);
+        console.log("@@ ERROR IN TRANSFORM: "+err+"\r\n"+err.stack);
     }
     finally {
         console.log("## exiting transform");
@@ -1779,9 +1779,13 @@ function $setSuccess(thing, sFunction, sOwner){
 
 function $transformToDocument(thing, sourceDoc){
     var targetDoc;
+    console.log("##Transform to fragment");
+
     thing.localController.targetNode = createDocument(thing.localController.principalResultURI);
     $setApiCommand(thing.localController, ($clinit_Controller$APIcommand() , TRANSFORM_TO_DOCUMENT));
     targetDoc = createDocument(thing.localController.principalResultURI);
+
+    console.log("##Render xml");
     return $renderXML(thing, sourceDoc, thing.importedStylesheet, targetDoc);
 }
 
@@ -59703,8 +59707,13 @@ function TransformFromStrings(inputDocStr, transformDocStr) {
         return "FAILED TO GENERATE OUTPUT";
     }
 
-    //var util = require('util'); return util.inspect(result.g.controller.principalOutputNode, { showHidden: false, depth: 2 });
-    return (new XMLSerializer()).serializeToString(result.g.controller.principalOutputNode.ownerDocument);
+    //result.g.controller.principalOutputNode.documentElement = result.g.controller.targetNode.documentElement;
+
+
+    //var util = require('util'); return util.inspect(result.g.controller, { showHidden: false, depth: 2 });
+    return (new XMLSerializer()).serializeToString(result.g.controller.principalOutputNode.currentNode);//.document_0);
+    //return (new XMLSerializer()).serializeToString(result.g.controller.targetNode.documentElement);
+    //return (new XMLSerializer()).serializeToString(result.g.controller.targetNode.documentElement);
 }
 
 module.exports = TransformFromStrings;
