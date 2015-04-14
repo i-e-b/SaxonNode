@@ -479,7 +479,7 @@ function $importControllerSettings(thing, lc){
     $setBaseOutputURI(thing, lc.principalResultURI);
     $setInitialMode(thing, !lc.initialMode?null:$getClarkName(lc.initialMode));
     $setInitialTemplate(thing, lc.initialTemplateName);
-    $setParameters(thing, lc.parameters);
+    thing.parameters = lc.parameters;
     $setBaseOutputURI(thing, lc.principalResultURI);
     thing.targetNode = lc.targetNode;
     $setApiCommand(thing, lc.commandType);
@@ -631,14 +631,6 @@ function $setParameter(thing, qName, value_0){
     $put_0(thing.parameters, qName, value_0);
 }
 
-function $setParameters(thing, params){
-    thing.parameters = params;
-}
-
-function $setRuleManager(thing, r){
-    thing.ruleManager = r;
-}
-
 function $setUserData(thing, key, name_0, data_0){
     var keyVal = jHashCode(key) + ' ' + name_0;
     data_0 == null?$removeStringValue(thing.userDataTable, keyVal):$putStringValue(thing.userDataTable, keyVal, data_0);
@@ -681,7 +673,7 @@ function $transform(thing, source, target){
             currentIter = !source?($clinit_EmptyIterator() , $clinit_EmptyIterator() , theInstance_1):new SingletonIterator(source);
             thing.initialTemplate?initialContext.setSingletonFocus(thing.initialContextItem):initialContext.setCurrentIterator(currentIter);
         }
-        !!thing.executable && $setRuleManager(thing, thing.executable.ruleManager);
+        !!thing.executable && (thing.ruleManager = thing.executable.ruleManager);
         thing.bindery = new Bindery;
         $initializeBindery(thing.executable, thing.bindery);
         $checkAllRequiredParamsArePresent(thing.executable, thing.parameters);
@@ -939,9 +931,7 @@ function getDocSynchronously(obj, config){
         if (instanceOf($e1, 19)) {
             e = $e1;
             throw new XPathException_0('Error resolving document: ' + e.getMessage());
-        }
-        else 
-            throw unwrap($e1);
+        } else throw unwrap($e1);
     }
     return new HTMLDocumentWrapper(doc, absSourceURI, config, 3);
 }
@@ -3513,26 +3503,18 @@ function parseXML(text_0){
     }
 }
 
-function serializeNativeXML(node){
-    if (typeof XMLSerializer != 'undefined')
-        return (new XMLSerializer).serializeToString(node);
-    else 
-        return node.xml;
-}
-
 function serializeXML(node){
     var e;
     try {
-        return serializeNativeXML(node);
+        if (typeof XMLSerializer != 'undefined') return (new XMLSerializer).serializeToString(node);
+        else return node.xml;
     }
     catch ($e0) {
         $e0 = wrap_0($e0);
         if (instanceOf($e0, 19)) {
             e = $e0;
             throw new XPathException_0('error in Saxon.serializeXML: ' + e.getMessage());
-        }
-        else 
-            throw unwrap($e0);
+        } else throw unwrap($e0);
     }
 }
 
@@ -59720,7 +59702,9 @@ function TransformFromStrings(inputDocStr, transformDocStr) {
     if (!result.g.controller.principalOutputNode) {
         return "FAILED TO GENERATE OUTPUT";
     }
-    return (new XMLSerializer()).serializeToString(result.g.controller.principalOutputNode);
+
+    //var util = require('util'); return util.inspect(result.g.controller.principalOutputNode, { showHidden: false, depth: 2 });
+    return (new XMLSerializer()).serializeToString(result.g.controller.principalOutputNode.ownerDocument);
 }
 
 module.exports = TransformFromStrings;
